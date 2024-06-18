@@ -5,11 +5,11 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.stereotype.Service;
 
 import com.infnet.edu.lucas.escolarsis.Domain.Disciplina.Avaliacao;
+import com.infnet.edu.lucas.escolarsis.Domain.Disciplina.Disciplina;
 import com.infnet.edu.lucas.escolarsis.Domain.Usuários.Aluno;
 import com.infnet.edu.lucas.escolarsis.Domain.Usuários.Professor;
 import com.infnet.edu.lucas.escolarsis.Persistance.Repositories.AvaliacaoRepository;
-import com.infnet.edu.lucas.escolarsis.utils.DisciplinaNomeToEntityMapper;
-
+import com.infnet.edu.lucas.escolarsis.Persistance.Repositories.DisciplinaRepository;
 import lombok.AllArgsConstructor;
 
 @Service
@@ -19,20 +19,25 @@ public class AvaliacaoService {
     @Autowired
     private final AvaliacaoRepository avaliacaoRepository;
     @Autowired
-    private final SecurityContext securityContext;
+    private final DisciplinaRepository disciplinaRepository;
     @Autowired
-    private final DisciplinaNomeToEntityMapper disciplinaNomeToEntityMapper; 
-
-    public void avaliar(Aluno aluno, String disciplina, String comentario, Double nota) {
+    private final SecurityContext securityContext;
+    
+    public void avaliar(Aluno aluno, Disciplina disciplina, String comentario, Double nota) {
+        
         Professor professorAvaliador = (Professor) securityContext.getAuthentication().getPrincipal();
+        
         var avaliacao = Avaliacao.builder()
             .aluno(aluno)
-            .disciplina(disciplinaNomeToEntityMapper.toEntity(disciplina))
+            .disciplina(disciplina)
             .comentario(comentario)
             .nota(nota)
             .professorAvaliador(professorAvaliador)
             .build();
 
+        disciplina.getAvaliacoes().add(avaliacao);
+        
+        disciplinaRepository.save(disciplina);
         avaliacaoRepository.save(avaliacao);
     }
 }
