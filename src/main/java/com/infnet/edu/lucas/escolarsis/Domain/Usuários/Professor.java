@@ -1,6 +1,11 @@
 package com.infnet.edu.lucas.escolarsis.Domain.Usuários;
 
 import java.util.Collection;
+import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import com.infnet.edu.lucas.escolarsis.Domain.Disciplina.Disciplina;
 
@@ -20,10 +25,26 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 @Table(name = "professores")
-public class Professor extends Pessoa {
+public class Professor extends Pessoa implements UserDetails {
     
     private String formacao;
+    private List<String> cargos;
     private String senha;
     @ManyToMany(mappedBy = "professores")
     private Collection<Disciplina> disciplinas;
+    
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.cargos.stream().map(cargo -> new SimpleGrantedAuthority(cargo)).toList();
+    }
+
+    @Override
+    public String getPassword() {
+        return this.senha;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.getNome();
+    }
 }
