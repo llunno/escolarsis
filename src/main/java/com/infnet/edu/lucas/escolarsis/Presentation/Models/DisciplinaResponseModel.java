@@ -6,8 +6,8 @@ public record DisciplinaResponseModel(
     UUID codigo,
     String nome,
     String descricao,
-    String totalAlunos,
-    String totalProfessores
+    int totalAlunos,
+    int totalProfessores
 ) {
 
 }

@@ -5,7 +5,6 @@ import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.infnet.edu.lucas.escolarsis.Domain.Disciplina.Disciplina;
 import com.infnet.edu.lucas.escolarsis.Domain.Usuários.Aluno;
 import com.infnet.edu.lucas.escolarsis.Persistance.Repositories.AlunoRepository;
 import com.infnet.edu.lucas.escolarsis.utils.EntityHandlerMethods;

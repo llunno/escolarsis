@@ -1,7 +1,7 @@
 package com.infnet.edu.lucas.escolarsis.Business.Services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.infnet.edu.lucas.escolarsis.Domain.Disciplina.Avaliacao;
@@ -20,12 +20,10 @@ public class AvaliacaoService {
     private final AvaliacaoRepository avaliacaoRepository;
     @Autowired
     private final DisciplinaRepository disciplinaRepository;
-    @Autowired
-    private final SecurityContext securityContext;
     
     public void avaliar(Aluno aluno, Disciplina disciplina, String comentario, Double nota) {
         
-        Professor professorAvaliador = (Professor) securityContext.getAuthentication().getPrincipal();
+        Professor professorAvaliador = (Professor) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         
         var avaliacao = Avaliacao.builder()
             .aluno(aluno)
