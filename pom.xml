@@ -32,6 +32,11 @@
         <org.projectlombok.version>1.18.30</org.projectlombok.version>
 	</properties>
 	<dependencies>
+	    <dependency>
+	        <groupId>org.instancio</groupId>
+	        <artifactId>instancio-junit</artifactId>
+	        <version>4.8.0</version>
+	    </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok-mapstruct-binding</artifactId>
