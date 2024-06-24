@@ -57,7 +57,7 @@ public class SecurityConfig {
                 .authenticationManager(authenticationManager(professorService))
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(customizer -> 
-                    customizer.loginPage("/professor/login")
+                    customizer
                     .successForwardUrl("/swagger-ui/index.html")
                     .defaultSuccessUrl("/swagger-ui/index.html")
                 )
