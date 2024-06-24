@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -40,6 +41,8 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(httpRequests ->
                     httpRequests
+                    .requestMatchers(HttpMethod.POST, "/professor/create").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/professor/login").permitAll()
                         .requestMatchers(
                             "/professor/create",
                             "/professor/login",
