@@ -42,20 +42,25 @@ public class SecurityConfig {
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/professor/create", "/professor/login"))
                 .authorizeHttpRequests(httpRequests ->
                     httpRequests
-                    .requestMatchers(HttpMethod.POST, "/professor/create").permitAll()
-                    .requestMatchers(HttpMethod.POST, "/professor/login").permitAll()
                     .requestMatchers(
-                            "/api-docs/**",
-                            "/swagger-ui/**",
-                            "/swagger-ui.html"
+                        "/api-docs/**",
+                        "/swagger-ui/**",
+                        "/swagger-ui.html"
                         ).permitAll()
+                        .requestMatchers(HttpMethod.POST, "/professor/create").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/professor/login").permitAll()
                         .anyRequest().authenticated()
                 )
                 .authenticationManager(authenticationManager(professorService))
                 .httpBasic(Customizer.withDefaults())
-                .formLogin(Customizer.withDefaults())
+                .formLogin(customizer -> 
+                    customizer.loginPage("/professor/login")
+                    .successForwardUrl("/swagger-ui/index.html")
+                    .defaultSuccessUrl("/swagger-ui/index.html")
+                )
                 .build();
     }
 
@@ -69,6 +74,7 @@ public class SecurityConfig {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
         daoAuthenticationProvider.setUserDetailsService(professorService);
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+        
         DaoAuthenticationProvider daoAuthenticationProvider2 = new DaoAuthenticationProvider();
         daoAuthenticationProvider2.setUserDetailsService(userDetailsService());
         
@@ -79,7 +85,6 @@ public class SecurityConfig {
     public UserDetailsService userDetailsService() {
         InMemoryUserDetailsManager userDetailsManager = new InMemoryUserDetailsManager();
         
-        // Add your in-memory user here
         userDetailsManager.createUser(
                 User.withUsername("professor")
                         .password("{noop}professor")
