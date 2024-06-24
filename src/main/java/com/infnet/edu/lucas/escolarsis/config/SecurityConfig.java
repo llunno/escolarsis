@@ -13,8 +13,11 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -42,6 +45,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(httpRequests ->
                     httpRequests
                     .requestMatchers(HttpMethod.POST, "/professor/create").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/professor/create/**").permitAll()
                     .requestMatchers(HttpMethod.POST, "/professor/login").permitAll()
                     .requestMatchers(
                             "/api-docs/**",
@@ -65,8 +69,25 @@ public class SecurityConfig {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
         daoAuthenticationProvider.setUserDetailsService(professorService);
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+        DaoAuthenticationProvider daoAuthenticationProvider2 = new DaoAuthenticationProvider();
+        daoAuthenticationProvider2.setUserDetailsService(userDetailsService());
         
-        return new ProviderManager(daoAuthenticationProvider);
+        return new ProviderManager(daoAuthenticationProvider, daoAuthenticationProvider2);
+    }
+
+    @Bean
+    public UserDetailsService userDetailsService() {
+        InMemoryUserDetailsManager userDetailsManager = new InMemoryUserDetailsManager();
+        
+        // Add your in-memory user here
+        userDetailsManager.createUser(
+                User.withUsername("professor")
+                        .password("{bcrypt}professor")
+                        .roles("USER")
+                        .build()
+        );
+        
+        return userDetailsManager;
     }
 
 	@Bean
