@@ -77,11 +77,11 @@ public class SecurityConfig {
     protected CorsConfigurationSource corsConfigurationSource() {
         return request -> {
             var corsConfig = new CorsConfiguration();
-            UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
             corsConfig.setAllowCredentials(true);
             corsConfig.addAllowedMethod("*");
             corsConfig.addAllowedOriginPattern("*");
-            source.registerCorsConfiguration("/**", corsConfig);
+            corsConfig.addAllowedOrigin("https://escolarsis-production.up.railway.app");
+            corsConfig.addAllowedOrigin("https://escolarsis-production.up.railway.app/**");
             return corsConfig;
         };
     }
