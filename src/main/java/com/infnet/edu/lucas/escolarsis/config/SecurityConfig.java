@@ -21,6 +21,7 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.infnet.edu.lucas.escolarsis.Business.Services.ProfessorService;
 import com.infnet.edu.lucas.escolarsis.Domain.Usuários.Professor;
@@ -76,8 +77,11 @@ public class SecurityConfig {
     protected CorsConfigurationSource corsConfigurationSource() {
         return request -> {
             var corsConfig = new CorsConfiguration();
-            corsConfig.setAllowedMethods(List.of("PUT", "DELETE", "GET", "POST"));
-            corsConfig.addAllowedOrigin("*");
+            UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+            corsConfig.setAllowCredentials(true);
+            corsConfig.addAllowedMethod("*");
+            corsConfig.addAllowedOriginPattern("*");
+            source.registerCorsConfiguration("/**", corsConfig);
             return corsConfig;
         };
     }
