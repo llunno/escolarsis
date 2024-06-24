@@ -43,9 +43,7 @@ public class SecurityConfig {
                     httpRequests
                     .requestMatchers(HttpMethod.POST, "/professor/create").permitAll()
                     .requestMatchers(HttpMethod.POST, "/professor/login").permitAll()
-                        .requestMatchers(
-                            "/professor/create",
-                            "/professor/login",
+                    .requestMatchers(
                             "/api-docs/**",
                             "/swagger-ui/**",
                             "/swagger-ui.html"
