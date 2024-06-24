@@ -45,7 +45,6 @@ public class SecurityConfig {
                 .authorizeHttpRequests(httpRequests ->
                     httpRequests
                     .requestMatchers(HttpMethod.POST, "/professor/create").permitAll()
-                    .requestMatchers(HttpMethod.POST, "/professor/create/**").permitAll()
                     .requestMatchers(HttpMethod.POST, "/professor/login").permitAll()
                     .requestMatchers(
                             "/api-docs/**",
@@ -56,6 +55,7 @@ public class SecurityConfig {
                 )
                 .authenticationManager(authenticationManager(professorService))
                 .httpBasic(Customizer.withDefaults())
+                .formLogin(Customizer.withDefaults())
                 .build();
     }
 
@@ -72,7 +72,7 @@ public class SecurityConfig {
         DaoAuthenticationProvider daoAuthenticationProvider2 = new DaoAuthenticationProvider();
         daoAuthenticationProvider2.setUserDetailsService(userDetailsService());
         
-        return new ProviderManager(daoAuthenticationProvider, daoAuthenticationProvider2);
+        return new ProviderManager(daoAuthenticationProvider2, daoAuthenticationProvider);
     }
 
     @Bean
