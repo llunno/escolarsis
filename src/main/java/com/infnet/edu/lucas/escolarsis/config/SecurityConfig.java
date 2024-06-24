@@ -12,19 +12,14 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.infnet.edu.lucas.escolarsis.Business.Services.ProfessorService;
-import com.infnet.edu.lucas.escolarsis.Domain.Usuários.Professor;
 
 @Configuration
 @EnableWebSecurity
@@ -73,16 +68,14 @@ public class SecurityConfig {
         return new ProviderManager(daoAuthenticationProvider);
     }
 
-    @Bean
-    protected CorsConfigurationSource corsConfigurationSource() {
-        return request -> {
-            var corsConfig = new CorsConfiguration();
-            corsConfig.setAllowCredentials(true);
-            corsConfig.addAllowedMethod("*");
-            corsConfig.addAllowedOriginPattern("*");
-            corsConfig.addAllowedOrigin("https://escolarsis-production.up.railway.app");
-            corsConfig.addAllowedOrigin("https://escolarsis-production.up.railway.app/**");
-            return corsConfig;
-        };
-    }
+	@Bean
+	CorsConfigurationSource corsConfigurationSource() {
+		CorsConfiguration configuration = new CorsConfiguration();
+		configuration.setAllowedOrigins(List.of("*"));
+		configuration.setAllowedMethods(List.of("*"));
+		configuration.setAllowedHeaders(List.of("*"));
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", configuration);
+		return source;
+	}
 }
