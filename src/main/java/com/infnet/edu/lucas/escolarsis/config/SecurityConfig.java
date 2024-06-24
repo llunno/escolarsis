@@ -82,8 +82,9 @@ public class SecurityConfig {
         // Add your in-memory user here
         userDetailsManager.createUser(
                 User.withUsername("professor")
-                        .password("{bcrypt}professor")
-                        .roles("USER")
+                        .password("professor")
+                        .roles("professor")
+                        .authorities("professor")
                         .build()
         );
         
