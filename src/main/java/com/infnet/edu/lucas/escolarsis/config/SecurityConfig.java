@@ -82,7 +82,7 @@ public class SecurityConfig {
         // Add your in-memory user here
         userDetailsManager.createUser(
                 User.withUsername("professor")
-                        .password("professor")
+                        .password("{noop}professor")
                         .roles("professor")
                         .authorities("professor")
                         .build()
