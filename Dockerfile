@@ -16,6 +16,8 @@ WORKDIR /build
 # Copy the mvnw wrapper with executable permissions.
 COPY --chmod=0755 mvnw mvnw
 COPY .mvn/ .mvn/
+COPY ./mvnw .
+COPY ./pom.xml .
 
 ################################################################################
 
@@ -30,6 +32,7 @@ FROM deps as package
 WORKDIR /build
 
 COPY ./src src/
+COPY . /
 RUN ./mvnw package -DskipTests && \
     mv target/$(./mvnw help:evaluate -Dexpression=project.artifactId -q -DforceStdout)-$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout).jar target/app.jar
 
